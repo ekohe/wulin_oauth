@@ -1,0 +1,17 @@
+sqlite3:
+  adapter: sqlite3
+  dbfile: vendor/plugins/wulin_oauth/test/sqlite3.db
+  
+postgresql:
+  adapter: postgresql
+  database: wulin_oauth_test
+  username: postgres
+  password: postgres
+  min_messages: ERROR
+  
+mysql:
+  adapter: mysql
+  host: localhost
+  username: root
+  password: password
+  database: wulin_oauth_test
