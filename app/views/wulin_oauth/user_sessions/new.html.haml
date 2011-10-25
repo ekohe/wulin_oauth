@@ -6,6 +6,11 @@
   #flash_notice_container
     - if flash[:notice]
       #flash_notice= flash[:notice]
+  
+  #connect_container
+    #connect
+      = link_to "Connect", @new_authorization_url
+      #indicator{:style => 'opacity:0;filter:alpha(opacity=0);-moz-opacity:0'}= image_tag 'indicator.gif'
 
-  = link_to "Connect", @new_authorization_url
-  #indicator{:style => 'opacity:0;filter:alpha(opacity=0);-moz-opacity:0'}= image_tag 'indicator.gif'
+:javascript
+  $(document).ready(function() { initializeConnect(); });
