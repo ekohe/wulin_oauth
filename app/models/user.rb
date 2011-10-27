@@ -1,6 +1,8 @@
 class User
   # Creates a user from the code coming after the oauth login
   def self.get_access_token(code)
+    return nil if code.nil? # Return nil if there's no code
+    
     response = HTTParty.post(WulinOAuth.access_token_url, :body => {
       :client_id => WulinOAuth.oauth_identifier, 
       :client_secret => WulinOAuth.oauth_secret, 
@@ -9,9 +11,14 @@ class User
       :grant_type => 'authorization_code'}
     )
     
+    return nil if response["access_token"].nil? # Returns nil if there's no access token
+    
     access_token = response["access_token"]
     user_info = HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token})    
-    self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
+    new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
+    return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
+    
+    new_user
   end
 
   # Creates a user from session data

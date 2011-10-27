@@ -39,8 +39,13 @@ class WulinOauth::UserSessionsController < ApplicationController
   
   # GET /oauth/callback?code=
   def callback
-    self.current_user = User.get_access_token(params[:code])
-    
-    redirect_to '/'
+    if params[:error].blank?
+      self.current_user = User.get_access_token(params[:code])
+      redirect_to '/'
+    else
+      @new_authorization_url = WulinOAuth.new_authorization_url(:reset_session => true)
+      render 'not_authorized'
+      return
+    end
   end
 end

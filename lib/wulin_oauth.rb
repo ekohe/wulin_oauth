@@ -27,7 +27,9 @@ module WulinOAuth
     "#{configuration['access_token_uri']}?client_id=#{self.oauth_identifier}&redirect_uri=#{self.redirect_uri}"
   end
   
-  def self.new_authorization_url
-     "#{configuration['authorize_uri']}?client_id=#{self.oauth_identifier}&redirect_uri=#{self.redirect_uri}"
+  def self.new_authorization_url(options={})
+    url = "#{configuration['authorize_uri']}?client_id=#{self.oauth_identifier}&redirect_uri=#{self.redirect_uri}"
+    url += "&reset_session=true" if options[:reset_session]
+    url
   end
 end

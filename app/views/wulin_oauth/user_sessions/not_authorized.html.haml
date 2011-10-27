@@ -1,0 +1,13 @@
+#login_panel
+  %h1 Not authorized
+
+  %p
+    = "Sorry, but you are not authorized to access #{WulinMaster.config.app_title}."
+    
+  #connect_container
+    #connect.large
+      = link_to "Connect using a different id", @new_authorization_url
+      #indicator{:style => 'opacity:0;filter:alpha(opacity=0);-moz-opacity:0'}= image_tag 'indicator.gif'
+
+:javascript
+  $(document).ready(function() { initializeConnect(); });
