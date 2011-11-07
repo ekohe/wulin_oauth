@@ -15,6 +15,7 @@ class User
     
     access_token = response["access_token"]
     user_info = HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token})    
+    Rails.logger.info "User info: #{user_info.inspect}"
     new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
     return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
     
@@ -30,13 +31,14 @@ class User
     end
   end
   
-  attr_accessor :id, :email, :access_token, :expire_at, :refresh_token
+  attr_accessor :id, :email, :access_token, :expire_at, :refresh_token, :level
   
   def initialize(attributes={})
     self.id = attributes[:id]
     self.email = attributes[:email]
     self.access_token = attributes[:access_token]
     self.refresh_token = attributes[:refresh_token]
+    self.level = attributes[:level].to_sym if attributes[:level]
     self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
     self.expire_at = Time.at(attributes[:expire_at].to_i) if attributes[:expire_at]
   end
@@ -47,6 +49,10 @@ class User
      :access_token => self.access_token,
      :refresh_token => self.refresh_token,
      :expire_at => self.expire_at}
+  end
+  
+  def admin?
+    self.level == :administrator
   end
 end
 
