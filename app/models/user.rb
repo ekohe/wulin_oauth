@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class User
   # Creates a user from the code coming after the oauth login
   def self.get_access_token(code)
@@ -15,7 +17,6 @@ class User
     
     access_token = response["access_token"]
     user_info = HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token})    
-    Rails.logger.info "User info: #{user_info.inspect}"
     new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
     return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
     
@@ -48,11 +49,61 @@ class User
      :email => self.email,
      :access_token => self.access_token,
      :refresh_token => self.refresh_token,
-     :expire_at => self.expire_at}
+     :expire_at => self.expire_at,
+     :level => self.level}
   end
   
   def admin?
     self.level == :administrator
   end
-end
+  
+  class << self
+    def reflections
+      {}
+    end
+    
+    def table_name
+      "users"
+    end
+    
+    def columns
+      [OpenStruct.new({:name => :email})]
+    end
+    
+    [:order, :limit, :offset, :includes, :joins, :where].each do |method|
+      define_method method do |args|
+        # Don't do anything, because we are passing by the complete URL anyway.
+        self
+      end
+    end
 
+    def current_user(user)
+      @current_user = user
+      self
+    end
+    
+    def set_request_uri(uri)
+      @request_uri = uri
+      self
+    end
+
+    def all
+      self.to_a
+    end
+    
+    def to_a
+      return [] unless @current_user && @request_uri
+      url = WulinOAuth.resource_host + @request_uri +
+            "&invited_users_only=true" +
+            "&oauth_token=" + @current_user.access_token 
+      users = HTTParty.get(url)
+      @count = users["total"].to_s
+      return [] unless users["rows"]
+      users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
+    end
+    
+    def count
+      @count
+    end
+  end
+end

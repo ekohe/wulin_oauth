@@ -30,7 +30,15 @@ module WulinOAuth
         if current_user.nil?
           return unauthorized_response
         else
-          logger.warn "Authenticated as #{current_user.email}, ##{current_user.id}"
+          logger.warn "Authenticated as #{current_user.email}, ##{current_user.id}, #{current_user.level.inspect}"
+        end
+      end
+      
+      def require_admin
+        if current_user.nil? || !current_user.admin?
+          return unauthorized_response
+        else
+          logger.warn "Authenticated as #{current_user.email}, ##{current_user.id}, #{current_user.level.inspect}"
         end
       end
 
