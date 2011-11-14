@@ -77,9 +77,13 @@ class User
       end
     end
 
-    def current_user(user)
-      @current_user = user
+    def set_current_user(user)
+      Thread.current[:user] = user
       self
+    end
+    
+    def current_user
+      Thread.current[:user]
     end
     
     def set_request_uri(uri)
