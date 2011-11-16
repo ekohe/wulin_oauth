@@ -96,10 +96,10 @@ class User
     end
     
     def to_a
-      return [] unless @current_user && @request_uri
+      return [] unless current_user && @request_uri
       url = WulinOAuth.resource_host + @request_uri +
             "&invited_users_only=true" +
-            "&oauth_token=" + @current_user.access_token 
+            "&oauth_token=" + current_user.access_token 
       users = HTTParty.get(url)
       @count = users["total"].to_s
       return [] unless users["rows"]
