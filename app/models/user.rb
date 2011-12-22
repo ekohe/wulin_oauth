@@ -66,6 +66,10 @@ class User
       "users"
     end
     
+    def column_names
+      %w(email)
+    end
+    
     def columns
       [OpenStruct.new({:name => :email})]
     end
