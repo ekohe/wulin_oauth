@@ -1,15 +1,8 @@
 module WulinOAuth
-  module Controller
-    ## this one manages the usual self.included, klass_eval stuff
+  module AbstractController
     extend ActiveSupport::Concern
-    
-    included do
-      class_eval do
-        helper_method :current_user
-      end
-    end
       
-    # InstanceMethods
+    # Instance Methods
     def current_user
       @current_user ||= User.from_session(session)
     end
@@ -21,6 +14,22 @@ module WulinOAuth
         session[:user] = new_user.to_hash
       end
     end
+  end
+end
+
+::AbstractController::Base.send :include, WulinOAuth::AbstractController
+
+module WulinOAuth
+  module Controller
+    extend ActiveSupport::Concern
+
+    included do
+      class_eval do
+        helper_method :current_user
+      end
+    end
+
+    # Instance Methods
 
     def on_login_page?
       params[:controller] == "wulin_oauth/user_sessions" && ["new", "create"].include?(params[:action])
@@ -55,4 +64,4 @@ module WulinOAuth
   end
 end
 
-::AbstractController::Base.send :include, WulinOAuth::Controller
+::ActionController::Base.send :include, WulinOAuth::Controller
