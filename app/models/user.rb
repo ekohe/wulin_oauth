@@ -16,7 +16,7 @@ class User
     return nil if response["access_token"].nil? # Returns nil if there's no access token
     
     access_token = response["access_token"]
-    user_info = HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token})    
+    user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token}).body)
     new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
     return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
     
@@ -104,10 +104,13 @@ class User
       url = WulinOAuth.resource_host + @request_uri +
             "&invited_users_only=true" +
             "&oauth_token=" + current_user.access_token 
-      users = HTTParty.get(url)
+      users = ActiveSupport::JSON.decode(HTTParty.get(url).body)
       @count = users["total"].to_s
       return [] unless users["rows"]
-      users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
+      # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
+      users["rows"].collect do |attrs|
+        User.new({id: attrs[0], email: attrs[1], level: attrs[2]})
+      end
     end
     
     def count
