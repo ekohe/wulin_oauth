@@ -1,0 +1,13 @@
+!!!
+%html
+  %head
+    %title
+      = WulinMaster.config.app_title
+      \- Sign in
+    = stylesheet_link_tag 'wulin_oauth'
+    = javascript_include_tag 'wulin_oauth'
+    = csrf_meta_tags
+  %body
+    #shadow
+    #container
+      = yield
