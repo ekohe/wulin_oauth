@@ -1,11 +1,12 @@
 require 'ostruct'
+require 'httparty'
 
 class User
   # Creates a user from the code coming after the oauth login
   def self.get_access_token(code)
     return nil if code.nil? # Return nil if there's no code
     
-    response = HTTParty.post(WulinOAuth.access_token_url, :body => {
+    response = ::HTTParty.post(WulinOAuth.access_token_url, :body => {
       :client_id => WulinOAuth.oauth_identifier, 
       :client_secret => WulinOAuth.oauth_secret, 
       :redirect_uri => WulinOAuth.redirect_uri, 
