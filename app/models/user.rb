@@ -2,38 +2,41 @@ require 'ostruct'
 require 'httparty'
 
 class User
-  # Creates a user from the code coming after the oauth login
-  def self.get_access_token(code)
-    return nil if code.nil? # Return nil if there's no code
-    
-    response = ::HTTParty.post(WulinOAuth.access_token_url, :body => {
-      :client_id => WulinOAuth.oauth_identifier, 
-      :client_secret => WulinOAuth.oauth_secret, 
-      :redirect_uri => WulinOAuth.redirect_uri, 
-      :code => code,
-      :grant_type => 'authorization_code'}
-    )
-    
-    return nil if response["access_token"].nil? # Returns nil if there's no access token
-    
-    access_token = response["access_token"]
-    user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token}).body)
-    new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
-    return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
-    
-    new_user
-  end
+  class <<self
+    # Creates a user from the code coming after the oauth login
+    def get_access_token(code)
+      return nil if code.nil? # Return nil if there's no code
 
-  # Creates a user from session data
-  def self.from_session(session)
-    if session[:user].nil?
-      nil
-    else
-      self.new(session[:user])
+      response = ::HTTParty.post(WulinOAuth.access_token_url, :body => {
+        :client_id => WulinOAuth.oauth_identifier, 
+        :client_secret => WulinOAuth.oauth_secret, 
+        :redirect_uri => WulinOAuth.redirect_uri, 
+        :code => code,
+        :grant_type => 'authorization_code'}
+      )
+
+      return nil if response["access_token"].nil? # Returns nil if there's no access token
+
+      access_token = response["access_token"]
+      user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token}).body)
+      new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
+      return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
+
+      new_user
+    end
+
+    # Creates a user from session data
+    def from_session(session)
+      if session[:user].nil?
+        nil
+      else
+        self.new(session[:user])
+      end
     end
   end
+
   
-  attr_accessor :id, :email, :access_token, :expire_at, :refresh_token, :level
+  attr_accessor :id, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
   
   def initialize(attributes={})
     self.id = attributes[:id]
@@ -59,6 +62,15 @@ class User
   end
   
   class << self
+    
+    def primary_key
+      "id"
+    end
+    
+    def finder_needs_type_condition?
+      false
+    end
+    
     def reflections
       {}
     end
@@ -71,15 +83,33 @@ class User
       %w(email)
     end
     
+    def find(id)
+      if Array === id
+        to_a.select{|x| x.id.to_i == id.to_i}
+      else
+        to_a.find{|x| x.id.to_i == id.to_i}
+      end
+    end
+    
     def columns
       [OpenStruct.new({:name => :email})]
     end
     
-    [:order, :limit, :offset, :includes, :joins, :where].each do |method|
-      define_method method do |args|
-        # Don't do anything, because we are passing by the complete URL anyway.
-        self
-      end
+    %w(order limit offset includes joins where).each do |method_name|
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{method_name}(*args)
+          self
+        end
+      RUBY
+    end
+    
+    # #map flatten uniq join
+    %w(map uniq flatten join).each do |method_name|
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{method_name}(*args)
+          all
+        end
+      RUBY
     end
 
     def set_current_user(user)
@@ -99,13 +129,15 @@ class User
     def all
       self.to_a
     end
+    alias_method :scoped, :all
     
     def to_a
       return [] unless current_user && @request_uri
       url = WulinOAuth.resource_host + @request_uri +
             "&invited_users_only=true" +
             "&oauth_token=" + current_user.access_token 
-      users = ActiveSupport::JSON.decode(HTTParty.get(url).body)
+      json_text = HTTParty.get(url).body
+      users = ActiveSupport::JSON.decode(json_text)
       @count = users["total"].to_s
       return [] unless users["rows"]
       # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
