@@ -1,0 +1,18 @@
+common: &common
+  authorize_uri: http://example.com/oauth/authorize
+  access_token_uri: http://example.com/oauth/access_token
+  resource_host: http://example.com
+  change_password_uri: http://example.com/users/change_password
+  logout_uri: http://example.com/logout
+
+development:
+  <<: *common
+  redirect_uri: http://localhost:3000/oauth/callback
+  oauth_identifier: <oauth_identifier> # put your own oauth_identifier here
+  oauth_secret: <oauth_secret> # put your own oauth_secret here
+
+production:
+  <<: *common
+  redirect_uri: http://production.com/oauth/callback
+  oauth_identifier: <oauth_identifier> # put your own oauth_identifier here
+  oauth_secret: <oauth_secret> # put your own oauth_secret here
