@@ -2,7 +2,7 @@ require 'ostruct'
 require 'httparty'
 
 class User
-  class <<self
+  class << self
     # Creates a user from the code coming after the oauth login
     def get_access_token(code)
       return nil if code.nil? # Return nil if there's no code
@@ -62,7 +62,6 @@ class User
   end
   
   class << self
-    
     def primary_key
       "id"
     end
@@ -127,7 +126,9 @@ class User
     end
 
     def all
-      self.to_a
+      Rails.cache.fetch("user_all_#{current_user.id}") do
+        self.to_a
+      end
     end
     alias_method :scoped, :all
     

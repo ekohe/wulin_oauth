@@ -1,7 +1,7 @@
 class WulinOauth::UserSessionsController < ApplicationController
   layout 'session'
 
-  skip_before_filter :require_login, :only => [:new, :create, :callback]
+  skip_before_filter :require_login, :only => [:new, :create, :callback, :clear_cache]
   
   # GET /login
   def new
@@ -46,5 +46,11 @@ class WulinOauth::UserSessionsController < ApplicationController
       render 'not_authorized'
       return
     end
+  end
+
+  # clear users cache which can be requested from mima
+  def clear_cache
+    Rails.cache.delete("user_all_#{current_user.id}") if current_user
+    self.response_body = "OK"
   end
 end
