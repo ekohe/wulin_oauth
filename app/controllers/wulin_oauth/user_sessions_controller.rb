@@ -50,7 +50,7 @@ class WulinOauth::UserSessionsController < ApplicationController
 
   # clear users cache which can be requested from mima
   def clear_cache
-    Rails.cache.delete("user_all_#{current_user.id}") if current_user
+    Rails.cache.delete("user_all")
     self.response_body = "OK"
   end
 end

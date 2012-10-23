@@ -126,7 +126,7 @@ class User
     end
 
     def all
-      Rails.cache.fetch("user_all_#{current_user.id}") do
+      Rails.cache.fetch("user_all") do
         self.to_a
       end
     end
