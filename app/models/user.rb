@@ -126,9 +126,7 @@ class User
     end
 
     def all
-      Rails.cache.fetch("user_all") do
-        self.to_a
-      end
+      self.to_a
     end
     alias_method :scoped, :all
     
