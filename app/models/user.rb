@@ -2,6 +2,7 @@ require 'ostruct'
 require 'httparty'
 
 class User
+  extend ActiveModel::Naming
   class << self
     # Creates a user from the code coming after the oauth login
     def get_access_token(code)
