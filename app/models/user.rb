@@ -19,7 +19,7 @@ class User
       return nil if response["access_token"].nil? # Returns nil if there's no access token
 
       access_token = response["access_token"]
-      user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + '/users/me.json', :query => {:oauth_token => access_token}).body)
+      user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + '/oauth/get_user/me.json', :query => {:oauth_token => access_token}).body)
       new_user = self.new(HashWithIndifferentAccess.new(response.merge(user_info)))
       return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
 
