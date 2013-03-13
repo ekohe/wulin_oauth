@@ -34,35 +34,7 @@ class User
         self.new(session[:user])
       end
     end
-  end
 
-  
-  attr_accessor :id, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
-  
-  def initialize(attributes={})
-    self.id = attributes[:id]
-    self.email = attributes[:email]
-    self.access_token = attributes[:access_token]
-    self.refresh_token = attributes[:refresh_token]
-    self.level = attributes[:level].to_sym if attributes[:level]
-    self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
-    self.expire_at = Time.at(attributes[:expire_at].to_i) if attributes[:expire_at]
-  end
-  
-  def to_hash
-    {:id => self.id,
-     :email => self.email,
-     :access_token => self.access_token,
-     :refresh_token => self.refresh_token,
-     :expire_at => self.expire_at,
-     :level => self.level}
-  end
-  
-  def admin?
-    self.level == :administrator
-  end
-  
-  class << self
     def primary_key
       "id"
     end
@@ -85,9 +57,9 @@ class User
     
     def find(id)
       if Array === id
-        to_a.select{|x| x.id.to_i == id.to_i}
+        all.select{|x| x.id.to_i == id.to_i}
       else
-        to_a.find{|x| x.id.to_i == id.to_i}
+        all.find{|x| x.id.to_i == id.to_i}
       end
     end
     
@@ -129,6 +101,7 @@ class User
     def all
       self.to_a
     end
+
     alias_method :scoped, :all
     
     def to_a
@@ -150,4 +123,31 @@ class User
       @count
     end
   end
+
+
+  attr_accessor :id, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
+  
+  def initialize(attributes={})
+    self.id = attributes[:id]
+    self.email = attributes[:email]
+    self.access_token = attributes[:access_token]
+    self.refresh_token = attributes[:refresh_token]
+    self.level = attributes[:level].to_sym if attributes[:level]
+    self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
+    self.expire_at = Time.at(attributes[:expire_at].to_i) if attributes[:expire_at]
+  end
+  
+  def to_hash
+    {:id => self.id,
+     :email => self.email,
+     :access_token => self.access_token,
+     :refresh_token => self.refresh_token,
+     :expire_at => self.expire_at,
+     :level => self.level}
+  end
+  
+  def admin?
+    self.level == :administrator
+  end
+
 end
