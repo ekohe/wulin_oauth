@@ -92,7 +92,7 @@ class User
     def current_user
       Thread.current[:user]
     end
-    
+
     def set_request_uri(uri)
       @request_uri = uri
       self
@@ -125,10 +125,11 @@ class User
   end
 
 
-  attr_accessor :id, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
+  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
   
   def initialize(attributes={})
     self.id = attributes[:id]
+    self.ip = attributes[:ip]
     self.email = attributes[:email]
     self.access_token = attributes[:access_token]
     self.refresh_token = attributes[:refresh_token]
@@ -139,6 +140,7 @@ class User
   
   def to_hash
     {:id => self.id,
+     :ip => self.ip,
      :email => self.email,
      :access_token => self.access_token,
      :refresh_token => self.refresh_token,
