@@ -24,9 +24,7 @@ module WulinOAuth
     extend ActiveSupport::Concern
 
     included do
-      class_eval do
-        helper_method :current_user
-      end
+      helper_method :current_user
     end
 
     # Instance Methods
