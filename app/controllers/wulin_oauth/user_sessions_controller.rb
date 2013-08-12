@@ -2,7 +2,6 @@ class WulinOauth::UserSessionsController < ApplicationController
   layout 'session'
 
   skip_before_filter :require_login, :only => [:new, :create, :callback]
-  skip_before_filter :set_request_ip
   
   # GET /login
   def new

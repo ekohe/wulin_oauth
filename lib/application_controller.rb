@@ -1,10 +1,16 @@
+require 'action_controller'
+
 module WulinOAuth
   module AbstractController
     extend ActiveSupport::Concern
       
     # Instance Methods
     def current_user
-      @current_user ||= User.from_session(session)
+      @current_user ||= begin
+        user = User.from_session(session)
+        user.ip = request.remote_ip if user
+        user
+      end
     end
     
     def current_user=(new_user)

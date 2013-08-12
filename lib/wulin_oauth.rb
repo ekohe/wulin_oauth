@@ -2,8 +2,6 @@ module WulinOAuth
   require 'engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
   require 'application_controller'
 
-  Dir.glob(File.join(File.dirname(__FILE__), '../app/controllers', "*.rb")) { |file| require file}
- 
   def self.configuration
     @configuration ||= YAML.load(File.read(File.join(Rails.root, 'config', 'wulin_oauth.yml')))[Rails.env]
     @configuration
