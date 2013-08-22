@@ -8,11 +8,19 @@ module WulinOAuth
     def current_user
       @current_user ||= begin
         user = User.from_session(session)
-        user.ip = request.remote_ip if user
+        user.ip = format_ip_address(request.remote_ip) if user
         user
       end
     end
     
+    def format_ip_address(ip)
+      if ip.starts_with? "::ffff:"
+        ip.gsub!(/^::ffff:/, '')
+      else
+        ip
+      end
+    end
+
     def current_user=(new_user)
       if new_user.nil?
         session[:user] = nil
