@@ -1,8 +1,8 @@
 class WulinOauth::UserSessionsController < ApplicationController
   layout 'session'
 
-  skip_before_filter :require_login, :only => [:new, :create, :callback]
-  
+  skip_before_action :require_login, :only => [:new, :create, :callback]
+
   # GET /login
   def new
     @new_authorization_url = WulinOAuth.new_authorization_url
@@ -35,7 +35,7 @@ class WulinOauth::UserSessionsController < ApplicationController
     reset_session
     redirect_to login_path
   end
-  
+
   # GET /oauth/callback?code=
   def callback
     if params[:error].blank?
