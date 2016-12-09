@@ -9,9 +9,9 @@ class User
       return nil if code.nil? # Return nil if there's no code
 
       response = ::HTTParty.post(WulinOAuth.access_token_url, :body => {
-        :client_id => WulinOAuth.oauth_identifier, 
-        :client_secret => WulinOAuth.oauth_secret, 
-        :redirect_uri => WulinOAuth.redirect_uri, 
+        :client_id => WulinOAuth.oauth_identifier,
+        :client_secret => WulinOAuth.oauth_secret,
+        :redirect_uri => WulinOAuth.redirect_uri,
         :code => code,
         :grant_type => 'authorization_code'}
       )
@@ -38,23 +38,23 @@ class User
     def primary_key
       "id"
     end
-    
+
     def finder_needs_type_condition?
       false
     end
-    
+
     def reflections
       {}
     end
-    
+
     def table_name
       "users"
     end
-    
+
     def column_names
       %w(email)
     end
-    
+
     def find(id)
       if Array === id
         all.select{|x| x.id.to_i == id.to_i}
@@ -62,11 +62,11 @@ class User
         all.find{|x| x.id.to_i == id.to_i}
       end
     end
-    
+
     def columns
       [OpenStruct.new({:name => :email})]
     end
-    
+
     %w(order limit offset includes joins where).each do |method_name|
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method_name}(*args)
@@ -74,7 +74,7 @@ class User
         end
       RUBY
     end
-    
+
     # #map flatten uniq join
     %w(map uniq flatten join).each do |method_name|
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -88,7 +88,7 @@ class User
       Thread.current[:user] = user
       self
     end
-    
+
     def current_user
       Thread.current[:user]
     end
@@ -103,12 +103,12 @@ class User
     end
 
     alias_method :scoped, :all
-    
+
     def to_a
       return [] unless current_user && @request_uri
       url = WulinOAuth.resource_host + @request_uri +
             "&invited_users_only=true" +
-            "&oauth_token=" + current_user.access_token 
+            "&oauth_token=" + current_user.access_token
       json_text = HTTParty.get(url).body
       users = ActiveSupport::JSON.decode(json_text)
       @count = users["total"].to_s
@@ -118,7 +118,7 @@ class User
         User.new({id: attrs[0], email: attrs[1], level: attrs[2]})
       end
     end
-    
+
     def count
       @count
     end
@@ -126,7 +126,7 @@ class User
 
 
   attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
-  
+
   def initialize(attributes={})
     self.id = attributes[:id]
     self.ip = attributes[:ip]
@@ -137,7 +137,7 @@ class User
     self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
     self.expire_at = Time.at(attributes[:expire_at].to_i) if attributes[:expire_at]
   end
-  
+
   def to_hash
     {:id => self.id,
      :ip => self.ip,
@@ -147,7 +147,7 @@ class User
      :expire_at => self.expire_at,
      :level => self.level}
   end
-  
+
   def admin?
     self.level == :administrator
   end
