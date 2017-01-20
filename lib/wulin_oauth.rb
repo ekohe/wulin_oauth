@@ -15,6 +15,10 @@ module WulinOAuth
     configuration['oauth_secret']
   end
 
+  def self.change_password_uri
+    configuration['change_password_uri']
+  end
+
   def self.redirect_uri
     configuration['redirect_uri']
   end
