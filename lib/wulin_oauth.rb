@@ -7,6 +7,10 @@ module WulinOAuth
     @configuration
   end
 
+  def self.configuration=(new_configuration)
+    @configuration = new_configuration
+  end
+
   def self.oauth_identifier
     configuration['oauth_identifier']
   end
