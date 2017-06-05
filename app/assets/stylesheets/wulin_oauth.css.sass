@@ -1,110 +1,98 @@
-@import 'materialize'
-
-html
-  height: 100%
-
 body
-  height: 100%
-  background: #ECEFF1
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  background: #353535 image-url("leather.png")
+  text-align: center
 
-#container
+#shadow
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
   height: 100%
+  content: ""
+  z-index: -1
+  background-image: -moz-radial-gradient(center, circle contain, rgba(0,0,0,0) 125px, rgba(0,0,0,.5) 250px )
+  background-image: -webkit-gradient(radial, 50% 50%, 125, 50% 50%, 250, from(rgba(0,0,0,0)), to(rgba(0,0,0,.5)))
 
-// body
-//   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
-//   background: #353535 image-url("leather.png")
-//   text-align: center
-//
-// #shadow
-//   position: absolute
-//   top: 0
-//   left: 0
-//   width: 100%
-//   height: 100%
-//   content: ""
-//   z-index: -1
-//   background-image: -moz-radial-gradient(center, circle contain, rgba(0,0,0,0) 125px, rgba(0,0,0,.5) 250px )
-//   background-image: -webkit-gradient(radial, 50% 50%, 125, 50% 50%, 250, from(rgba(0,0,0,0)), to(rgba(0,0,0,.5)))
-//
-// #login_panel
-//   text-align: left
-//   margin: -100px auto auto -255px
-//   width: 510px
-//   position: absolute
-//   top: 50%
-//   left: 50%
-//
-//   p
-//     color: #ccc
-//
-//   #connect_container
-//     text-align: center
-//
-//   #connect
-//     margin-left: auto
-//     margin-right: auto
-//     text-align: center
-//     width: 205px
-//     a
-//       float: left
-//       display: block
-//       text-align: center
-//       text-decoration: none
-//       font-size: 18px
-//       margin-left: 40px
-//       padding: 5px
-//       width: 120px
-//       height: 25px
-//       background-color: #ccc
-//       background: -moz-linear-gradient(bottom, #bbb, #fff)
-//       background: -ms-linear-gradient(bottom, #bbb, #fff)
-//       background: -o-linear-gradient(bottom, #bbb, #fff)
-//       background: -webkit-linear-gradient(bottom, #bbb, #fff)
-//       background: linear-gradient(bottom, #bbb, #fff)
-//       -webkit-border-radius: 5px
-//       -moz-border-radius: 5px
-//       border-radius: 5px
-//       border: 1px solid #222
-//       color: #333
-//       cursor: pointer
-//       text-shadow: 0 0 1px rgba(255,255,255,.2)
-//
-//     a:hover
-//       color: #000
-//       text-shadow: 0 0 1px rgba(255,255,255,.2)
-//       -moz-box-shadow: 0 0 10px #fff
-//       -webkit-box-shadow: 0 0 10px #fff
-//       box-shadow: 0 0 10px #fff
-//
-//   #connect.large
-//     width: 340px
-//     a
-//       width: 250px
-//
-//   h1
-//     color: white
-//     font-size: 24px
-//
-//   #indicator
-//     float: right
-//
-//   #flash_notice
-//     margin-bottom: 10px
-//     -webkit-border-radius: 5px
-//     -moz-border-radius: 5px
-//     border-radius: 5px
-//     padding: 5px
-//     background: #ffe78f
-//     background: -moz-linear-gradient(bottom, #fff3c4, #ffe78f)
-//     background: -ms-linear-gradient(bottom, #fff3c4, #ffe78f)
-//     background: -o-linear-gradient(bottom, #fff3c4, #ffe78f)
-//     background: -webkit-linear-gradient(bottom, #fff3c4, #ffe78f)
-//     background: linear-gradient(bottom, #fff3c4, #ffe78f)
-//     -moz-box-shadow: 1px 2px 5px #000
-//     -webkit-box-shadow: 1px 2px 5px #000
-//     box-shadow: 1px 2px 5px #000
-//     font-size: 16px
-//     text-align: center
-//     color: #7F5401
-//     text-shadow: white 0px 1px 1px
-//     -webkit-font-smoothing: antialiased
+#login_panel
+  text-align: left
+  margin: -100px auto auto -255px
+  width: 510px
+  position: absolute
+  top: 50%
+  left: 50%
+
+  p
+    color: #ccc
+
+  #connect_container
+    text-align: center
+
+  #connect
+    margin-left: auto
+    margin-right: auto
+    text-align: center
+    width: 205px
+    a
+      float: left
+      display: block
+      text-align: center
+      text-decoration: none
+      font-size: 18px
+      margin-left: 40px
+      padding: 5px
+      width: 120px
+      height: 25px
+      background-color: #ccc
+      background: -moz-linear-gradient(bottom, #bbb, #fff)
+      background: -ms-linear-gradient(bottom, #bbb, #fff)
+      background: -o-linear-gradient(bottom, #bbb, #fff)
+      background: -webkit-linear-gradient(bottom, #bbb, #fff)
+      background: linear-gradient(bottom, #bbb, #fff)
+      -webkit-border-radius: 5px
+      -moz-border-radius: 5px
+      border-radius: 5px
+      border: 1px solid #222
+      color: #333
+      cursor: pointer
+      text-shadow: 0 0 1px rgba(255,255,255,.2)
+    
+    a:hover
+      color: #000
+      text-shadow: 0 0 1px rgba(255,255,255,.2)
+      -moz-box-shadow: 0 0 10px #fff
+      -webkit-box-shadow: 0 0 10px #fff  
+      box-shadow: 0 0 10px #fff
+  
+  #connect.large
+    width: 340px
+    a
+      width: 250px
+  
+  h1
+    color: white
+    font-size: 24px
+
+  #indicator
+    float: right
+    
+  #flash_notice
+    margin-bottom: 10px
+    -webkit-border-radius: 5px
+    -moz-border-radius: 5px
+    border-radius: 5px
+    padding: 5px
+    background: #ffe78f
+    background: -moz-linear-gradient(bottom, #fff3c4, #ffe78f)
+    background: -ms-linear-gradient(bottom, #fff3c4, #ffe78f)
+    background: -o-linear-gradient(bottom, #fff3c4, #ffe78f)
+    background: -webkit-linear-gradient(bottom, #fff3c4, #ffe78f)
+    background: linear-gradient(bottom, #fff3c4, #ffe78f)
+    -moz-box-shadow: 1px 2px 5px #000
+    -webkit-box-shadow: 1px 2px 5px #000  
+    box-shadow: 1px 2px 5px #000
+    font-size: 16px
+    text-align: center
+    color: #7F5401
+    text-shadow: white 0px 1px 1px
+    -webkit-font-smoothing: antialiased

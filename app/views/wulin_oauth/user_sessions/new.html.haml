@@ -1,31 +1,16 @@
-#container.valign-wrapper
-  .row.center-align.white.z-depth-1{style: 'width:400px;'}
-    %br
-    %h5
-      Sign in to
-      = WulinMaster.config.app_title
-    .col.m1
-    .col.m10
-      = link_to @new_authorization_url do
-        %span.waves-effect.waves-light.btn Connect
-    .row
+#login_panel
+  %h1
+    Sign in to
+    = WulinMaster.config.app_title
+  
+  #flash_notice_container
+    - if flash[:notice]
+      #flash_notice= flash[:notice]
+  
+  #connect_container
+    #connect
+      = link_to "Connect", @new_authorization_url
+      #indicator{:style => 'opacity:0;filter:alpha(opacity=0);-moz-opacity:0'}= image_tag 'indicator.gif'
 
 :javascript
   $(document).ready(function() { initializeConnect(); });
-
--# #login_panel
--#   %h1
--#     Sign in to
--#     = WulinMaster.config.app_title
--#
--#   #flash_notice_container
--#     - if flash[:notice]
--#       #flash_notice= flash[:notice]
--#
--#   #connect_container
--#     #connect
--#       = link_to "Connect", @new_authorization_url
--#       #indicator{:style => 'opacity:0;filter:alpha(opacity=0);-moz-opacity:0'}= image_tag 'indicator.gif'
--#
--# :javascript
--#   $(document).ready(function() { initializeConnect(); });
