@@ -1,0 +1,15 @@
+@import 'materialize/components/color'
+$color-theme: <%= WulinMaster.config.color_theme %>
+$primary-color: color(#{$color-theme}, 'lighten-2') !default
+$secondary-color: color(#{$color-theme}, 'base') !default
+@import 'materialize'
+
+html
+  height: 100%
+
+body
+  height: 100%
+  background: color('grey', 'lighten-4')
+
+#container
+  height: 100%
