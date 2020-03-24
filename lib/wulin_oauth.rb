@@ -1,5 +1,5 @@
 module WulinOAuth
-  require 'engine' if defined?(Rails) && Rails::VERSION::MAJOR == 5
+  require 'engine' if defined?(Rails) && Rails::VERSION::MAJOR >= 5
   require 'application_controller'
 
   def self.configuration
