@@ -12,13 +12,11 @@ Gem::Specification.new do |s|
   s.summary     = "Authentication module for wulin_master"
   s.description = "This gem provides a Oauth authentication interface."
 
-  s.rubyforge_project = "wulin_oauth"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  
+
   s.add_dependency 'haml'
   s.add_dependency 'haml-rails'
   s.add_dependency 'httparty'
