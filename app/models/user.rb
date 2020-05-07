@@ -55,6 +55,12 @@ class User
       %w(email)
     end
 
+    def human_attribute_name(column)
+      {
+        email: 'Email'
+      }[column.to_sym]
+    end
+
     def find(id)
       if Array === id
         all.select{|x| x.id.to_i == id.to_i}
