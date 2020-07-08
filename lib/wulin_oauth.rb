@@ -50,7 +50,7 @@ if defined? WulinMaster
     data: { target: "user_menu-list" },
     order: 1000
   ) do |sub_menu|
-    sub_menu.add_menu(:change_password, label: 'Change Password', icon: :eject, url: "https://mima.ekohe.com/change_password")
-    sub_menu.add_menu(:lagout, label: 'Logout', icon: :lock, url: "/logout")
+    sub_menu.add_menu(:change_password, label: 'Change Password', icon: :lock, url: "https://mima.ekohe.com/change_password")
+    sub_menu.add_menu(:lagout, label: 'Logout', icon: :eject, url: "/logout")
   end
 end
