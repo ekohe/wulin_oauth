@@ -128,6 +128,23 @@ class User
     def count
       @count
     end
+
+    def uninvited_users
+      return [] unless current_user && @request_uri
+      url = WulinOAuth.resource_host + "/users.json?" + @request_uri[12..-1] +
+            "&uninvited_users_only=true" +
+            "&oauth_token=" + current_user.access_token
+      json_text = HTTParty.get(url).body
+      users = ActiveSupport::JSON.decode(json_text)
+      @count = users["total"]
+      return [] unless users["rows"]
+      # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
+      users["rows"].collect do |attrs|
+        User.new({id: attrs[0], email: attrs[1], level: attrs[2]})
+      end
+    end
+
+    end
   end
 
 
