@@ -144,6 +144,12 @@ class User
       end
     end
 
+    def invite(user_ids)
+      url = "#{WulinOAuth.resource_host}/invitations"
+      HTTParty.post(url, body: {
+        user_ids: user_ids,
+        oauth_token: current_user.access_token
+      })
     end
   end
 
