@@ -110,11 +110,10 @@ class User
 
     alias_method :scoped, :all
 
-    def to_a
+    def to_a(options = { invited: true })
       return [] unless current_user && @request_uri
-      url = WulinOAuth.resource_host + "/users.json?" + @request_uri[12..-1] +
-            "&invited_users_only=true" +
-            "&oauth_token=" + current_user.access_token
+      invited_condition = options[:invited] ? '&invited_users_only=true' : '&uninvited_users_only=true&count=20000'
+      url = "#{WulinOAuth.resource_host}/users.json?#{@request_uri[12..-1]}#{invited_condition}&oauth_token=#{current_user.access_token}"
       json_text = HTTParty.get(url).body
       users = ActiveSupport::JSON.decode(json_text)
       @count = users["total"]
@@ -127,6 +126,16 @@ class User
 
     def count
       @count
+    end
+
+    def invite(user_ids)
+      url = "#{WulinOAuth.resource_host}/invitations"
+      json_text = HTTParty.post(url, body: {
+        user_ids: user_ids,
+        oauth_token: current_user.access_token
+      }).body
+
+      ActiveSupport::JSON.decode(json_text)
     end
   end
 
