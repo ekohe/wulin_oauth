@@ -166,7 +166,7 @@ class User
   end
 
   def admin?
-    self.level == :administrator
+    self.level == :administrator || app_admin?
   end
 
   def app_admin?
