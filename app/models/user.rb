@@ -120,7 +120,7 @@ class User
       return [] unless users["rows"]
       # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
       users["rows"].collect do |attrs|
-        User.new({id: attrs[0], email: attrs[1], level: attrs[2]})
+        User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3]})
       end
     end
 
@@ -140,13 +140,14 @@ class User
   end
 
 
-  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at
+  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at, :app_admin
 
   def initialize(attributes={})
     self.id = attributes[:id]
     self.ip = attributes[:ip]
     self.email = attributes[:email]
     self.access_token = attributes[:access_token]
+    self.app_admin = attributes[:app_admin]
     self.refresh_token = attributes[:refresh_token]
     self.level = attributes[:level].to_sym if attributes[:level]
     self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
@@ -160,6 +161,7 @@ class User
      :access_token => self.access_token,
      :refresh_token => self.refresh_token,
      :expire_at => self.expire_at,
+     :app_admin => self.app_admin,
      :level => self.level}
   end
 
@@ -167,4 +169,7 @@ class User
     self.level == :administrator
   end
 
+  def app_admin?
+    app_admin
+  end
 end
