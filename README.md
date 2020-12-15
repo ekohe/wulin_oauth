@@ -5,8 +5,25 @@
 - Put 'gem wulin_oauth' to your Gemfile:
 
   ```shell
-  gem wulin_oauth
+  gem `wulin_oauth`
   ```
+
+  **_Hint_(very significant)**: As we add the invite/dismiss user function(add_user/remove_user action), which is based on `wulin_permits`. So we have to put the `wulin_oauth` under `wulin_permits` in the `Gemfile`, for example:
+
+  ```ruby
+  gem "wulin_permits", path: "vendor/gems/wulin_permits"
+  gem "wulin_oauth", path: "vendor/gems/wulin_oauth"
+  ```
+
+  Besides, we added the `WulinMaster.actions.AddUser`, so we have to import the `wulin_oauth.js` into your project `app/assets/javascripts/application.js`, for example:
+
+  ```js
+  //= require 'master/master.js'
+  //= require 'wulin_permits.js'
+  //= require 'wulin_oauth.js'
+  ```
+
+  you'd better put `wulin_oauth.js` under `master/master.js` to avoid unnecessary trouble.
 
 - Run bundler command to install the gem:
 
