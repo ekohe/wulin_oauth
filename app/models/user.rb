@@ -146,6 +146,25 @@ class User
 
       ActiveSupport::JSON.decode(json_text)
     end
+
+    def create(params)
+      url = "#{WulinOAuth.resource_host}/users/create_from_app"
+      json_text = HTTParty.post(url, body: {
+        oauth_token: User.current_user.access_token,
+        user: params.permit(:email)
+      }).body
+
+      ActiveSupport::JSON.decode(json_text)
+    end
+
+    def send_mail(user_id)
+      url = "#{WulinOAuth.resource_host}/users/#{user_id}/send_mail_from_app"
+      json_text = HTTParty.put(url, body: {
+        oauth_token: User.current_user.access_token,
+      }).body
+
+      ActiveSupport::JSON.decode(json_text)
+    end
   end
 
 

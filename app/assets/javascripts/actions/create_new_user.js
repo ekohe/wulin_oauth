@@ -8,6 +8,12 @@ WulinMaster.actions.CreateNewUser = $.extend(
 
     handler: function (e) {
       self = this;
+      // what I want is not the invite_user grid, but users gird
+      // var grid = this.getGrid();
+      var gridName = $("body").find(".grid_container").attr("name");
+      console.log("gridName", gridName);
+      var grid = gridManager.getGrid(gridName);
+
       var createNewUserForm = `
       <div id="create_new_user">
         <div class="field">
@@ -24,23 +30,32 @@ WulinMaster.actions.CreateNewUser = $.extend(
             .append($("<h5/>").text("Create new user"))
             .append(createNewUserForm);
         },
-      }).width(500);
+      })
+        .width(500)
+        .height(250);
 
       var $modalFooter = Ui.modalFooter("Send welcome email").appendTo(
         $createUserContainer
       );
-      $modalFooter.find(".confirm-btn").on("click", function () {
-        var email = $createUserContainer.find(".field #email").val();
+      $modalFooter
+        .find(".confirm-btn")
+        .off("click")
+        .on("click", function () {
+          var email = $createUserContainer.find(".field #email").val();
 
-        if (!self.validateEmail(email)) {
-          displayErrorMessage(
-            "You have entered an invalid email address. Please check again!"
-          );
-          return;
-        }
+          if (!self.validateEmail(email)) {
+            displayErrorMessage(
+              "You have entered an invalid email address. Please check again!"
+            );
+            return;
+          }
 
-        // TODO sen welcome email
-      });
+          self.createNewUser(grid, email);
+          // close create_new_user popup
+          $createUserContainer.modal("close");
+          // close add_user popup
+          $("i.modal-close").trigger("click");
+        });
     },
 
     validateEmail: function (email) {
@@ -52,6 +67,34 @@ WulinMaster.actions.CreateNewUser = $.extend(
         return true;
       }
       return false;
+    },
+
+    createNewUser: function (grid, email) {
+      self = this;
+      let data = { user: { email: email } };
+      $.post("/users", data, function (response) {
+        if (response.success) {
+          self.sendWelcomeEmail(grid, response.id);
+        } else {
+          displayErrorMessage(response.error_message);
+        }
+      });
+    },
+
+    sendWelcomeEmail: function (grid, user_id) {
+      $.post(
+        `/users/${user_id}/send_mail`,
+        { _method: "PUT" },
+        function (response) {
+          if (response.success) {
+            // reload users grid data
+            grid.loader.reloadData();
+            displayNewNotification("Email successfully sent!");
+          } else {
+            displayErrorMessage(response.error_message);
+          }
+        }
+      );
     },
   }
 );
