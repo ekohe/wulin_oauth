@@ -15,10 +15,14 @@ WulinMaster.actions.CreateNewUser = $.extend(
       var grid = gridManager.getGrid(gridName);
 
       var createNewUserForm = `
-      <div id="create_new_user">
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="text" id="email" name="order[email]">
+      <div id="create_new_user" class='create_form'>
+        <div class='field-line'>
+          <div class='field'>
+            <div class='input-field input-outlined'>
+              <label for="email">Email</label>
+              <input type="text" id="email" name="order[email]">
+            </div>
+          </div>
         </div>
       </div>
     `;
