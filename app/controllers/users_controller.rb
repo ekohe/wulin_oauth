@@ -3,7 +3,7 @@ require_dependency WulinPermits::Engine.config.root.join('app', 'controllers', '
 class UsersController
   def invite
     invite_result = User.invite(params[:user_ids])
-    render json: { message: invite_result["message"] }
+    render json: invite_result
   end
 
   def destroy

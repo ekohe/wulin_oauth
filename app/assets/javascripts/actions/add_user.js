@@ -48,9 +48,13 @@ WulinMaster.actions.AddUser = $.extend({}, WulinMaster.actions.BaseAction, {
       user_ids: invitedUserIds,
     };
     $.post("/users/invite", data, function (response) {
-      displayNewNotification(response.message);
+      if (response.success) {
+        displayNewNotification(response.message);
+        self.target.loader.reloadData();
+      } else {
+        displayErrorMessage(response.message);
+      }
       dialogDom.parent().modal("close");
-      self.target.loader.reloadData();
     });
   },
 });
