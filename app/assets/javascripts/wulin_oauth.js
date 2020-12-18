@@ -1,2 +1,2 @@
 //= require jquery
-//= require 'connect'
+//= require_tree .
