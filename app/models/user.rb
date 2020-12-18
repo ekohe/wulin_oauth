@@ -137,6 +137,15 @@ class User
 
       ActiveSupport::JSON.decode(json_text)
     end
+
+    def remove(user_id)
+      url = "#{WulinOAuth.resource_host}/invitations/#{user_id}"
+      json_text = HTTParty.delete(url, body: {
+        oauth_token: User.current_user.access_token
+      }).body
+
+      ActiveSupport::JSON.decode(json_text)
+    end
   end
 
 
