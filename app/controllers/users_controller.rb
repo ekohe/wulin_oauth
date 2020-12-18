@@ -8,16 +8,12 @@ class UsersController
 
   def destroy
     remove_result = if params[:id] == current_user.id.to_s
-      JSON.parse({ success: false, message: 'You can not delete yourself from the APP' }.to_json)
+      JSON.parse({ success: false, error_message: 'You can not delete yourself from the APP' }.to_json)
     else
       grid.model.remove(params[:id])
     end
 
-    if remove_result['success']
-      render json: { success: true }
-    else
-      render json: { success: false, error_message: remove_result['message'] }
-    end
+    render json: remove_result
   rescue StandardError
     render json: { success: false, error_message: $ERROR_INFO.message }
   end

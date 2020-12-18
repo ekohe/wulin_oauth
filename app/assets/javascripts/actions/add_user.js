@@ -52,7 +52,7 @@ WulinMaster.actions.AddUser = $.extend({}, WulinMaster.actions.BaseAction, {
         displayNewNotification(response.message);
         self.target.loader.reloadData();
       } else {
-        displayErrorMessage(response.message);
+        displayErrorMessage(response.error_message);
       }
       dialogDom.parent().modal("close");
     });
