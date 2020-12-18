@@ -7,7 +7,7 @@ class InvitedUserGrid < WulinMaster::Grid
 
   cell_editable false
 
-  action :create_new_user, icon: :person_add, global: true
+  action :create_new_user, icon: :person_add, global: true, title: 'Create New User'
 
   column :email, :width => 500
 end
