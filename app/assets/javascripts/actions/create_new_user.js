@@ -3,7 +3,7 @@
 WulinMaster.actions.CreateNewUser = $.extend(
   {},
   WulinMaster.actions.BaseAction,
-  {
+  window.useAction(({ sendWelcomeEmail }) => ({
     name: "create_new_user",
 
     handler: function (e) {
@@ -78,29 +78,13 @@ WulinMaster.actions.CreateNewUser = $.extend(
       let data = { user: { email: email } };
       $.post("/users", data, function (response) {
         if (response.success) {
-          self.sendWelcomeEmail(grid, response.id);
+          sendWelcomeEmail(grid, response.id);
         } else {
           displayErrorMessage(response.error_message);
         }
       });
     },
-
-    sendWelcomeEmail: function (grid, user_id) {
-      $.post(
-        `/users/${user_id}/send_mail`,
-        { _method: "PUT" },
-        function (response) {
-          if (response.success) {
-            // reload users grid data
-            grid.loader.reloadData();
-            displayNewNotification("Email successfully sent!");
-          } else {
-            displayErrorMessage(response.error_message);
-          }
-        }
-      );
-    },
-  }
+  }))
 );
 
 WulinMaster.ActionManager.register(WulinMaster.actions.CreateNewUser);
