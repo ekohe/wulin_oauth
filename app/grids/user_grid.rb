@@ -8,4 +8,5 @@ class UserGrid
   column :welcome_email_sent_at, editable: false, formable: false
   action :add_user, screen: 'AddUserScreen', model: 'user', icon: :add_box, global: true, title: 'Invite User', only: [:MasterUserDetailRoleScreen]
   action :remove_user, icon: :clear, title: 'Remove User', only: [:MasterUserDetailRoleScreen]
+  action :reset_account, icon: :replay, title: 'Reset Account', only: [:MasterUserDetailRoleScreen]
 end
