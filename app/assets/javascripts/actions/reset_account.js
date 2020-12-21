@@ -8,7 +8,31 @@ WulinMaster.actions.ResetAccount = $.extend(
     // Toolbar Item 'Reset Account'
 
     handler: function () {
-      alert("1111111");
+      var self = this;
+      var grid = this.getGrid();
+
+      var ids = grid.getSelectedIds();
+      if (ids.length === 1) {
+        self.sendWelcomeEmail(grid, ids[0]);
+      } else {
+        displayErrorMessage("Please select a record.");
+      }
+    },
+
+    sendWelcomeEmail: function (grid, user_id) {
+      $.post(
+        `/users/${user_id}/send_mail`,
+        { _method: "PUT" },
+        function (response) {
+          if (response.success) {
+            // reload users grid data
+            grid.loader.reloadData();
+            displayNewNotification("Email successfully sent!");
+          } else {
+            displayErrorMessage(response.error_message);
+          }
+        }
+      );
     },
   }
 );
