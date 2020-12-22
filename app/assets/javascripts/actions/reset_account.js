@@ -8,7 +8,6 @@ WulinMaster.actions.ResetAccount = $.extend(
     // Toolbar Item 'Reset Account'
 
     handler: function () {
-      var self = this;
       var grid = this.getGrid();
 
       var ids = grid.getSelectedIds();
