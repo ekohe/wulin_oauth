@@ -9,12 +9,15 @@ WulinMaster.actions.ResetAccount = $.extend(
 
     handler: function () {
       var grid = this.getGrid();
-
-      var ids = grid.getSelectedIds();
-      if (ids.length === 1) {
-        sendWelcomeEmail(grid, ids[0]);
+      if (grid.screen === "MasterUserDetailRoleScreen") {
+        var ids = grid.getSelectedIds();
+        if (ids.length === 1) {
+          sendWelcomeEmail(grid, ids[0]);
+        } else {
+          displayErrorMessage("Please select a record.");
+        }
       } else {
-        displayErrorMessage("Please select a record.");
+        displayErrorMessage("Please make sure you are in the right page");
       }
     },
   }))
