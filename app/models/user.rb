@@ -120,7 +120,7 @@ class User
       return [] unless users["rows"]
       # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
       users["rows"].collect do |attrs|
-        User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3], 'a_password': attrs[5], welcome_email_sent_at: attrs[6]})
+        User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3], a_password: attrs[5], welcome_email_sent_at: attrs[6]})
       end
     end
 
