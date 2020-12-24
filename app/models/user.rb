@@ -120,7 +120,7 @@ class User
       return [] unless users["rows"]
       # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
       users["rows"].collect do |attrs|
-        User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3]})
+        User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3], 'a_password': attrs[5], welcome_email_sent_at: attrs[6]})
       end
     end
 
@@ -168,7 +168,7 @@ class User
   end
 
 
-  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at, :app_admin
+  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at, :app_admin, :a_password, :welcome_email_sent_at
 
   def initialize(attributes={})
     self.id = attributes[:id]
@@ -176,6 +176,8 @@ class User
     self.email = attributes[:email]
     self.access_token = attributes[:access_token]
     self.app_admin = attributes[:app_admin]
+    self.a_password = attributes[:a_password]
+    self.welcome_email_sent_at = attributes[:welcome_email_sent_at]
     self.refresh_token = attributes[:refresh_token]
     self.level = attributes[:level].to_sym if attributes[:level]
     self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
@@ -183,14 +185,18 @@ class User
   end
 
   def to_hash
-    {:id => self.id,
-     :ip => self.ip,
-     :email => self.email,
-     :access_token => self.access_token,
-     :refresh_token => self.refresh_token,
-     :expire_at => self.expire_at,
-     :app_admin => self.app_admin,
-     :level => self.level}
+    {
+      id: self.id,
+      ip: self.ip,
+      email: self.email,
+      access_token: self.access_token,
+      refresh_token: self.refresh_token,
+      expire_at: self.expire_at,
+      app_admin: self.app_admin,
+      a_password: self.a_password,
+      welcome_email_sent_at: self.welcome_email_sent_at,
+      level: self.level
+    }
   end
 
   def admin?
