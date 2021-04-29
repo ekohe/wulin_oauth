@@ -25,6 +25,8 @@
 
   you'd better put `wulin_oauth.js` under `master/master.js` to avoid unnecessary trouble.
 
+  If you get a error like `users create (NoMethodError) "undefined method errors for #<User:0x00006bec69aa62b8>"`, please make sure the UsersController that is being called is from `wulin_oauth`.
+
 - Run bundler command to install the gem:
 
   ```shell
