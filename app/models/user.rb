@@ -171,6 +171,7 @@ class User
   attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :expire_at, :app_admin, :a_password, :welcome_email_sent_at
 
   def initialize(attributes={})
+    attributes.symbolize_keys!
     self.id = attributes[:id]
     self.ip = attributes[:ip]
     self.email = attributes[:email]
