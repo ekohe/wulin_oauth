@@ -5,9 +5,39 @@
       Sign in to
       = WulinMaster.config.app_title
     .col.m1
-    .col.m10
+    #connect.col.m10
       = link_to @new_authorization_url do
         %span.waves-effect.waves-light.btn Connect
+    #indicator{style: 'display:none;'}
+      .preloader-wrapper.small.active
+        .spinner-layer.spinner-blue
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-red
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-yellow
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-green
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
     .row
 
 :javascript
