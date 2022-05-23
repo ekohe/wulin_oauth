@@ -114,7 +114,10 @@ class User
       return [] unless current_user && @request_uri
       invited_condition = options[:invited] ? '&invited_users_only=true' : '&uninvited_users_only=true&count=20000'
       url = "#{WulinOAuth.resource_host}/users.json?#{@request_uri[12..-1]}#{invited_condition}&oauth_token=#{current_user.access_token}"
-      json_text = HTTParty.get(url).body
+      response = HTTParty.get(url)
+      raise WulinOAuth::WulinOauthAuthenticationError if response.code == 401
+
+      json_text = response.body
       users = ActiveSupport::JSON.decode(json_text)
       @count = users["total"]
       return [] unless users["rows"]
