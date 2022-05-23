@@ -1,6 +1,7 @@
 module WulinOAuth
   require 'wulin_oauth/engine' if defined?(Rails) && Rails::VERSION::MAJOR >= 5
   require 'application_controller'
+  require "wulin_oauth/errors/wulin_oauth_authentication_error"
 
   def self.configuration
     @configuration ||= YAML.load(File.read(File.join(Rails.root, 'config', 'wulin_oauth.yml')))[Rails.env]
