@@ -84,10 +84,14 @@ class User
 
     def find(id)
       if Array === id
-        all.select { |x| x.id.to_i == id.to_i }
+        cached_all_users.select { |x| x.id.to_i == id.to_i }
       else
-        all.find { |x| x.id.to_i == id.to_i }
+        cached_all_users.find { |x| x.id.to_i == id.to_i }
       end
+    end
+
+    def cached_all_users
+      Thread.current[:all] ||= all
     end
 
     def columns
