@@ -15,7 +15,8 @@ if (typeof(WulinMaster) != 'undefined') {
         },
       });
 
-      var $modalFooter = Ui.modalFooter("Invite").appendTo($addUserModal);
+      var $modalFooter = Ui.appendModalFooter("Invite", $addUserModal);
+
       $modalFooter
         .find(".confirm-btn")
         .addClass("disabled")
