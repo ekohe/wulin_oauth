@@ -124,6 +124,10 @@ class User
       Thread.current[:user]
     end
 
+    def request_uri
+      @request_uri
+    end
+
     def set_request_uri(uri)
       @request_uri = uri
       self
