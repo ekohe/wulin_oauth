@@ -198,7 +198,7 @@ class User
     end
   end
 
-  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :app_admin, :a_password, :welcome_email_sent_at
+  attr_accessor :id, :ip, :email, :access_token, :refresh_token, :level, :expire_at, :app_admin, :a_password, :welcome_email_sent_at, :can_change_password
 
   def initialize(attributes = {})
     attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
@@ -213,6 +213,7 @@ class User
     self.level = attributes[:level].to_sym if attributes[:level]
     self.expire_at = Time.now + attributes[:expires_in].to_i if attributes[:expires_in]
     self.expire_at = Time.at(attributes[:expire_at].to_i) if attributes[:expire_at]
+    self.can_change_password = attributes[:can_change_password]
   end
 
   def to_hash
@@ -226,7 +227,8 @@ class User
       app_admin: app_admin,
       a_password: a_password,
       welcome_email_sent_at: welcome_email_sent_at,
-      level: level
+      level: level,
+      can_change_password: can_change_password
     }
   end
 
@@ -236,5 +238,9 @@ class User
 
   def app_admin?
     app_admin
+  end
+
+  def can_change_password?
+    can_change_password.nil? ? true : can_change_password
   end
 end
