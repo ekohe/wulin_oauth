@@ -3,9 +3,19 @@ module WulinOAuth
   require 'application_controller'
   require "wulin_oauth/errors/wulin_oauth_authentication_error"
 
+  # see https://gitlab.ekohe.com/ekohe/wulin/wulin_oauth/-/merge_requests/18
   def self.configuration
-    @configuration ||= YAML.load(File.read(File.join(Rails.root, 'config', 'wulin_oauth.yml')))[Rails.env]
-    @configuration
+    @configuration ||= begin
+      begin
+        YAML.load_file(
+          Rails.root.join('config', 'wulin_oauth.yml'), aliases: true
+        )[Rails.env]
+      rescue ArgumentError
+        YAML.load_file(
+          Rails.root.join('config', 'wulin_oauth.yml')
+        )[Rails.env]
+      end
+    end
   end
 
   def self.configuration=(new_configuration)
