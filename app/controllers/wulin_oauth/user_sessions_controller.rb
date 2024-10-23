@@ -40,8 +40,13 @@ class WulinOauth::UserSessionsController < ApplicationController
   def callback
     if params[:error].blank?
       self.current_user = User.get_access_token(params[:code])
-      handle_change_password_link
-      redirect_to '/'
+      if current_user.present?
+        handle_change_password_link
+        redirect_to '/'
+      else
+        reset_session
+        redirect_to login_path
+      end
     else
       @new_authorization_url = WulinOAuth.new_authorization_url(:reset_session => true)
       render 'not_authorized'
