@@ -139,9 +139,11 @@ class User
 
     alias_method :scoped, :all
 
+    LIMIT = 20000
+
     def to_a(options = {invited: true})
       return [] unless current_user && @request_uri
-      invited_condition = options[:invited] ? "&invited_users_only=true" : "&uninvited_users_only=true&count=20000"
+      invited_condition = options[:invited] ? "&invited_users_only=true&count=#{LIMIT}" : "&uninvited_users_only=true&count=#{LIMIT}"
       query = URI(@request_uri).query
       url = "#{WulinOAuth.resource_host}/users.json?#{query}#{invited_condition}&oauth_token=#{current_user.access_token}"
       response = HTTParty.get(url)
@@ -149,6 +151,7 @@ class User
 
       json_text = response.body
       users = ActiveSupport::JSON.decode(json_text)
+      @raw_response = users
       @count = users["total"]
       return [] unless users["rows"]
       # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
@@ -157,7 +160,7 @@ class User
       end
     end
 
-    attr_reader :count
+    attr_reader :count, :raw_response
 
     def invite(user_ids)
       url = "#{WulinOAuth.resource_host}/invitations"
