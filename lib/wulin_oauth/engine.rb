@@ -5,7 +5,7 @@ require 'action_controller'
 module WulinOAuth
   class Engine < ::Rails::Engine
     initializer "add assets to precompile" do |app|
-       app.config.assets.precompile += %w( wulin_oauth.js wulin_oauth.css )
+       app.config.assets.precompile += %w( wulin_oauth.js wulin_oauth.css indicator.gif )
     end
   end
 end
