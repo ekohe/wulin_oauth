@@ -6,7 +6,10 @@ require_dependency WulinPermits::Engine.config.root.join('app', 'grids', 'user_g
 class UserGrid
   column :a_password, label: 'Has a password?', editable: false, formable: false, sortable: false, filterable: false
   column :welcome_email_sent_at, editable: false, formable: false
-  action :add_user, screen: 'AddUserScreen', model: 'user', icon: :add_box, global: true, title: 'Invite User', only: [:MasterUserDetailRoleScreen]
-  action :remove_user, icon: :clear, title: 'Remove User', only: [:MasterUserDetailRoleScreen]
-  action :reset_account, icon: :contact_mail, title: 'Reset Account', only: [:MasterUserDetailRoleScreen]
+  action :add_user, screen: 'AddUserScreen', model: 'user', icon: :add_box, global: true, title: 'Invite User', only: [:MasterUserDetailRoleScreen],
+    authorized?: ->(user) { user.has_permission_with_name?(WulinPermits::UserManagement::INVITE) }
+  action :remove_user, icon: :clear, title: 'Remove User', only: [:MasterUserDetailRoleScreen],
+    authorized?: ->(user) { user.has_permission_with_name?(WulinPermits::UserManagement::DELETE) }
+  action :reset_account, icon: :contact_mail, title: 'Reset Account', only: [:MasterUserDetailRoleScreen],
+    authorized?: ->(user) { user.has_permission_with_name?(WulinPermits::UserManagement::RESET) }
 end

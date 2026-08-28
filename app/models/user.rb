@@ -5,11 +5,10 @@ class User
   extend ActiveModel::Naming
   class << self
     def find_by_ids user_ids
-      query = {
-        oauth_token: current_user.access_token,
+      query = signed_oauth_params.merge(
         api_mode: true,
         user_ids: user_ids.join(",")
-      }
+      )
 
       url = "#{WulinOAuth.resource_host}/users.json?#{query.to_param}"
 
@@ -145,7 +144,7 @@ class User
       return [] unless current_user && @request_uri
       invited_condition = options[:invited] ? "&invited_users_only=true&count=#{LIMIT}" : "&uninvited_users_only=true&count=#{LIMIT}"
       query = URI(@request_uri).query
-      url = "#{WulinOAuth.resource_host}/users.json?#{query}#{invited_condition}&oauth_token=#{current_user.access_token}"
+      url = "#{WulinOAuth.resource_host}/users.json?#{query}#{invited_condition}&#{signed_oauth_params.to_query}"
       response = HTTParty.get(url)
       raise WulinOAuth::WulinOauthAuthenticationError if response.code == 401
 
@@ -164,40 +163,34 @@ class User
 
     def invite(user_ids)
       url = "#{WulinOAuth.resource_host}/invitations"
-      json_text = HTTParty.post(url, body: {
-        user_ids: user_ids,
-        oauth_token: current_user.access_token
-      }).body
+      json_text = HTTParty.post(url, body: signed_oauth_params.merge(user_ids: user_ids)).body
 
       ActiveSupport::JSON.decode(json_text)
     end
 
     def remove(user_id)
       url = "#{WulinOAuth.resource_host}/invitations/#{user_id}"
-      json_text = HTTParty.delete(url, body: {
-        oauth_token: User.current_user.access_token
-      }).body
+      json_text = HTTParty.delete(url, body: signed_oauth_params).body
 
       ActiveSupport::JSON.decode(json_text)
     end
 
     def create(params)
       url = "#{WulinOAuth.resource_host}/users/create_from_app"
-      json_text = HTTParty.post(url, body: {
-        oauth_token: User.current_user.access_token,
-        user: params.permit(:email)
-      }).body
+      json_text = HTTParty.post(url, body: signed_oauth_params.merge(user: params.permit(:email))).body
 
       ActiveSupport::JSON.decode(json_text)
     end
 
     def send_mail(user_id)
       url = "#{WulinOAuth.resource_host}/users/#{user_id}/send_mail_from_app"
-      json_text = HTTParty.put(url, body: {
-        oauth_token: User.current_user.access_token
-      }).body
+      json_text = HTTParty.put(url, body: signed_oauth_params).body
 
       ActiveSupport::JSON.decode(json_text)
+    end
+
+    def signed_oauth_params
+      WulinOAuth::AppRequestSigner.params(oauth_token: current_user.access_token)
     end
   end
 
