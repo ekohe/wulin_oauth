@@ -33,7 +33,7 @@ module WulinOAuth
     end
 
     def on_login_page?
-      params[:controller] == "wulin_oauth/user_sessions" && ["new", "create"].include?(params[:action])
+      params[:controller] == "wulin_oauth/user_sessions" && params[:action] == "new"
     end
 
     def require_login

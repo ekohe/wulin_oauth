@@ -9,6 +9,9 @@ RSpec.describe "wulin_oauth routes", type: :routing do
   it { expect(get: "/logout").to route_to("wulin_oauth/user_sessions#destroy") }
   it { expect(get: "/oauth/callback").to route_to("wulin_oauth/user_sessions#callback") }
 
+  # There is no password sign-in: the provider's callback is the only way in.
+  it { expect(post: "/login").not_to be_routable }
+
   it "names the paths the views and redirects use" do
     expect([login_path, logout_path, callback_path]).to eq(%w[/login /logout /oauth/callback])
   end
