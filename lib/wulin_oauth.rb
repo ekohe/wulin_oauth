@@ -6,17 +6,9 @@ require "wulin_oauth/errors/wulin_oauth_authentication_error"
 require "wulin_oauth/app_request_signer"
 
 module WulinOAuth
-  # see https://gitlab.ekohe.com/ekohe/wulin/wulin_oauth/-/merge_requests/18
+  # aliases: the per-environment sections share the provider settings through a YAML anchor.
   def self.configuration
-    @configuration ||= begin
-      YAML.load_file(
-        Rails.root.join("config", "wulin_oauth.yml"), aliases: true
-      )[Rails.env]
-    rescue ArgumentError
-      YAML.load_file(
-        Rails.root.join("config", "wulin_oauth.yml")
-      )[Rails.env]
-    end
+    @configuration ||= YAML.load_file(Rails.root.join("config", "wulin_oauth.yml"), aliases: true)[Rails.env]
   end
 
   def self.configuration=(new_configuration)
