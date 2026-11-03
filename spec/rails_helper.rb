@@ -5,7 +5,6 @@ require "rails"
 require "action_controller/railtie"
 require "active_model/railtie"
 require "haml-rails"
-require "tmpdir"
 
 require_relative "support/wulin_master"
 
@@ -18,10 +17,11 @@ end
 require "wulin_oauth"
 
 # There is no database and no ActiveRecord model to boot a full dummy app for, so this is the smallest
-# Rails::Application that gives real routing and a real ActionController::Base: config.root is an empty
-# tmp dir, so the only routes drawn are the engine's.
+# Rails::Application that gives real routing and a real ActionController::Base. Its root,
+# spec/fixtures/host_app, has no routes of its own -- the only ones drawn are the engine's -- and
+# stands in for wulin_permits' UsersController and UserGrid, which the engine's overrides extend.
 class TestApp < Rails::Application
-  config.root = Dir.mktmpdir
+  config.root = File.expand_path("fixtures/host_app", __dir__)
   config.eager_load = false
   config.secret_key_base = "test"
   config.hosts.clear
@@ -33,6 +33,9 @@ class TestApp < Rails::Application
 end
 
 Rails.application.initialize!
+
+# Read before any example can autoload them: booting must not load the classes the overrides extend.
+LOADED_AT_BOOT = %i[UsersController UserGrid].reject { |name| Object.autoload?(name) }.freeze
 
 require "rspec/rails"
 

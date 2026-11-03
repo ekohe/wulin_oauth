@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency WulinPermits::Engine.config.root.join("app", "controllers", "users_controller")
-
-class UsersController
+# Adds the invitation actions to wulin_permits' UsersController, against the provider's users.
+# Applied by WulinOAuth::Engine each time Zeitwerk loads UsersController, and not itself autoloaded:
+# as app/controllers/users_controller.rb it would shadow wulin_permits'.
+UsersController.class_eval do
   skip_before_action :require_authorization, only: [:invite, :create, :destroy, :send_mail]
 
   def invite
@@ -12,14 +13,14 @@ class UsersController
 
   def destroy
     remove_result = if params[:id] == current_user.id.to_s
-      JSON.parse({success: false, error_message: "You can not delete yourself from the APP"}.to_json)
+      {"success" => false, "error_message" => "You can not delete yourself from the APP"}
     else
       grid.model.remove(params[:id])
     end
 
     render json: remove_result
-  rescue
-    render json: {success: false, error_message: $ERROR_INFO.message}
+  rescue => e
+    render json: {success: false, error_message: e.message}
   end
 
   def create

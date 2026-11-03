@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency WulinPermits::Engine.config.root.join("app", "grids", "user_grid")
-
-# Add account creation capabilities
-class UserGrid
+# Adds account creation to wulin_permits' UserGrid. Applied by WulinOAuth::Engine each time Zeitwerk
+# loads UserGrid, and not itself autoloaded: as app/grids/user_grid.rb it would shadow wulin_permits'.
+UserGrid.class_eval do
   column :a_password, label: "Has a password?", editable: false, formable: false, sortable: false, filterable: false
   column :welcome_email_sent_at, editable: false, formable: false
   action :add_user, screen: "AddUserScreen", model: "user", icon: :add_box, global: true, title: "Invite User", only: [:MasterUserDetailRoleScreen],
