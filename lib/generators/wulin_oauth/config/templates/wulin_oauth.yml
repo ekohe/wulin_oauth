@@ -11,6 +11,12 @@ development:
   oauth_identifier: <oauth_identifier> # put your own oauth_identifier here
   oauth_secret: <oauth_secret> # put your own oauth_secret here
 
+test:
+  <<: *common
+  redirect_uri: http://localhost:3000/oauth/callback
+  oauth_identifier: test
+  oauth_secret: test
+
 production:
   <<: *common
   redirect_uri: http://production.com/oauth/callback
