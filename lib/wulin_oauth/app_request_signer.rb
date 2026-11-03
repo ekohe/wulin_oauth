@@ -10,7 +10,7 @@ module WulinOAuth
     def self.params(oauth_token:, secret: WulinOAuth.oauth_secret, timestamp: Time.now.to_i)
       timestamp = timestamp.to_s
       {
-        oauth_token: oauth_token,
+        :oauth_token => oauth_token,
         TIMESTAMP_PARAM => timestamp,
         SIGNATURE_PARAM => signature(secret: secret, timestamp: timestamp, oauth_token: oauth_token)
       }

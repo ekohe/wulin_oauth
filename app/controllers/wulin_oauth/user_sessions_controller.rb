@@ -1,7 +1,9 @@
-class WulinOauth::UserSessionsController < ApplicationController
-  layout 'session'
+# frozen_string_literal: true
 
-  skip_before_action :require_login, :only => [:new, :create, :callback]
+class WulinOauth::UserSessionsController < ApplicationController
+  layout "session"
+
+  skip_before_action :require_login, only: [:new, :create, :callback]
 
   # GET /login
   def new
@@ -13,12 +15,12 @@ class WulinOauth::UserSessionsController < ApplicationController
 
   def create
     user = WulinOAuth::User.find_by_email(params[:email])
-    if user && user.authenticate(params[:password])
+    if user&.authenticate(params[:password])
       session[:user_id] = user.id
       respond_to do |format|
         root_path ||= "/"
         format.html { redirect_to root_path }
-        format.json { render :json => {:status => :success, :user_id => current_user.id} }
+        format.json { render json: {status: :success, user_id: current_user.id} }
       end
     else
       respond_to do |format|
@@ -26,7 +28,7 @@ class WulinOauth::UserSessionsController < ApplicationController
           flash[:notice] = "Username or password incorrect."
           render :new
         end
-        format.json { render :json => {:status => :wrong_credentials} }
+        format.json { render json: {status: :wrong_credentials} }
       end
     end
   end
@@ -42,22 +44,22 @@ class WulinOauth::UserSessionsController < ApplicationController
       self.current_user = User.get_access_token(params[:code])
       if current_user.present?
         handle_change_password_link
-        redirect_to '/'
+        redirect_to "/"
       else
         reset_session
         redirect_to login_path
       end
     else
-      @new_authorization_url = WulinOAuth.new_authorization_url(:reset_session => true)
-      render 'not_authorized'
-      return
+      @new_authorization_url = WulinOAuth.new_authorization_url(reset_session: true)
+      render "not_authorized"
+      nil
     end
   end
 
   def handle_change_password_link
     if current_user.can_change_password?
-      password_link = WulinMaster::AppBarMenu.menus.find(:user_menu).menus.detect {|menu| menu.name == :change_password }
-      WulinMaster::AppBarMenu.menus.find(:user_menu).add_menu(:change_password, label: 'Change Password', icon: :lock, order: 1, url: -> { WulinOAuth.change_password_uri }, target: :_blank) if password_link.nil?
+      password_link = WulinMaster::AppBarMenu.menus.find(:user_menu).menus.detect { |menu| menu.name == :change_password }
+      WulinMaster::AppBarMenu.menus.find(:user_menu).add_menu(:change_password, label: "Change Password", icon: :lock, order: 1, url: -> { WulinOAuth.change_password_uri }, target: :_blank) if password_link.nil?
     else
       WulinMaster::AppBarMenu.menus.find(:user_menu).menus.select! { |menu| menu.name != :change_password }
     end

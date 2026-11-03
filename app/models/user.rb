@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require "ostruct"
 require "httparty"
 
 class User
   extend ActiveModel::Naming
+
   class << self
     def find_by_ids user_ids
       query = signed_oauth_params.merge(
@@ -123,9 +126,7 @@ class User
       Thread.current[:user]
     end
 
-    def request_uri
-      @request_uri
-    end
+    attr_reader :request_uri
 
     def set_request_uri(uri)
       @request_uri = uri
@@ -237,6 +238,6 @@ class User
   end
 
   def can_change_password?
-    can_change_password.nil? ? true : can_change_password
+    can_change_password.nil? || can_change_password
   end
 end

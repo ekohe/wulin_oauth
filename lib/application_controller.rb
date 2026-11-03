@@ -1,9 +1,11 @@
-require 'action_controller'
+# frozen_string_literal: true
+
+require "action_controller"
 
 module WulinOAuth
   module AbstractController
     extend ActiveSupport::Concern
-      
+
     # Instance Methods
     def current_user
       @current_user ||= begin
@@ -12,20 +14,20 @@ module WulinOAuth
         user
       end
     end
-    
+
     def format_ip_address(ip)
       if ip.starts_with? "::ffff:"
-        ip.gsub!(/^::ffff:/, '')
+        ip.gsub!(/^::ffff:/, "")
       else
         ip
       end
     end
 
     def current_user=(new_user)
-      if new_user.nil?
-        session[:user] = nil
+      session[:user] = if new_user.nil?
+        nil
       else
-        session[:user] = new_user.to_hash
+        new_user.to_hash
       end
     end
   end
@@ -49,15 +51,15 @@ module WulinOAuth
 
     def require_login
       if current_user.nil?
-        return unauthorized_response
+        unauthorized_response
       else
         logger.warn "Authenticated as #{current_user.email}, ##{current_user.id}, #{current_user.level.inspect}"
       end
     end
-    
+
     def require_admin
       if current_user.nil? || !current_user.admin?
-        return unauthorized_response
+        unauthorized_response
       else
         logger.warn "Authenticated as #{current_user.email}, ##{current_user.id}, #{current_user.level.inspect}"
       end
@@ -69,7 +71,7 @@ module WulinOAuth
           flash[:notice] = "You must be logged in to access this page."
           redirect_to login_path
         end
-        format.json { render :json => {:error => :not_authorized} }
+        format.json { render json: {error: :not_authorized} }
       end
       false
     end

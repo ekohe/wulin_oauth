@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class AddUserScreen < WulinMaster::Screen
   title "Invite User"
 
-  grid InvitedUserGrid, title: 'Invite User', master_model: 'users'
+  grid InvitedUserGrid, title: "Invite User", master_model: "users"
 
   def authorized?(user = nil)
     user ||= current_user
