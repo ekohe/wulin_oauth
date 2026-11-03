@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require "action_controller"
-
 module WulinOAuth
   module AbstractController
     extend ActiveSupport::Concern
 
-    # Instance Methods
     def current_user
       @current_user ||= begin
         user = User.from_session(session)
@@ -24,26 +21,16 @@ module WulinOAuth
     end
 
     def current_user=(new_user)
-      session[:user] = if new_user.nil?
-        nil
-      else
-        new_user.to_hash
-      end
+      session[:user] = new_user&.to_hash
     end
   end
-end
 
-::AbstractController::Base.send :include, WulinOAuth::AbstractController
-
-module WulinOAuth
   module Controller
     extend ActiveSupport::Concern
 
     included do
       helper_method :current_user
     end
-
-    # Instance Methods
 
     def on_login_page?
       params[:controller] == "wulin_oauth/user_sessions" && ["new", "create"].include?(params[:action])
@@ -77,5 +64,3 @@ module WulinOAuth
     end
   end
 end
-
-::ActionController::Base.send :include, WulinOAuth::Controller

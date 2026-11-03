@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module WulinOAuth
-  require "wulin_oauth/engine" if defined?(Rails) && Rails::VERSION::MAJOR >= 5
-  require "application_controller"
-  require "wulin_oauth/errors/wulin_oauth_authentication_error"
-  require "wulin_oauth/app_request_signer"
+require "wulin_oauth/version"
+require "wulin_oauth/engine" if defined?(Rails)
+require "wulin_oauth/errors/wulin_oauth_authentication_error"
+require "wulin_oauth/app_request_signer"
 
+module WulinOAuth
   # see https://gitlab.ekohe.com/ekohe/wulin/wulin_oauth/-/merge_requests/18
   def self.configuration
     @configuration ||= begin

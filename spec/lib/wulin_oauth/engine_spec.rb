@@ -8,6 +8,12 @@ RSpec.describe WulinOAuth::Engine do
     expect(ActionController::Base.method_defined?(:require_login)).to be(true)
   end
 
+  # Not AbstractController::Base, which also sits under ActionController::API and every mailer.
+  it "leaves ActionController::API alone" do
+    expect(ActionController::API.method_defined?(:current_user)).to be(false)
+    expect(ActionController::API.method_defined?(:require_login)).to be(false)
+  end
+
   it "adds the user menu to WulinMaster's app bar" do
     expect(WulinMaster::AppBarMenu.menus.menus.map(&:name)).to include(:user_menu, :change_password, :logout)
   end
