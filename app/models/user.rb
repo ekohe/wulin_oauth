@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require "ostruct"
 require "httparty"
 
 class User
   extend ActiveModel::Naming
+
+  # What a grid reads from a column of User. A Struct, not an OpenStruct: ostruct is no longer a
+  # default gem from Ruby 4.0.
+  Column = Struct.new(:name)
 
   class << self
     def find_by_ids user_ids
@@ -43,7 +46,7 @@ class User
 
       access_token = response["access_token"]
       user_info = ActiveSupport::JSON.decode(HTTParty.get(WulinOAuth.resource_host + "/oauth/get_user/me.json", query: {oauth_token: access_token}).body)
-      new_user = new(HashWithIndifferentAccess.new(response.merge(user_info)))
+      new_user = new(response.merge(user_info).with_indifferent_access)
       return nil if new_user.id.nil? # Returns nil if there is no id associated to the user
 
       new_user
@@ -97,7 +100,7 @@ class User
     end
 
     def columns
-      [OpenStruct.new({name: :email})]
+      [Column.new(:email)]
     end
 
     %w[order limit offset includes joins where].each do |method_name|
@@ -154,7 +157,6 @@ class User
       @raw_response = users
       @count = users["total"]
       return [] unless users["rows"]
-      # users["rows"].collect{|attributes| User.new(HashWithIndifferentAccess.new(attributes.inject({}){|a,b| a.merge(b)})) }
       users["rows"].collect do |attrs|
         User.new({id: attrs[0], email: attrs[1], level: attrs[2], app_admin: attrs[3], a_password: attrs[5], welcome_email_sent_at: attrs[6]})
       end
