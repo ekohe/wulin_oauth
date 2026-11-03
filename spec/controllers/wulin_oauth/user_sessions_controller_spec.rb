@@ -52,4 +52,22 @@ RSpec.describe WulinOauth::UserSessionsController, type: :controller do
       expect(session[:user][:id]).to eq(1)
     end
   end
+
+  describe "#current_user" do
+    before { get :new }
+
+    it "drops an expired token from the session" do
+      session[:user] = {id: 1, email: "test@example.com", expire_at: Time.now.to_i - 60}
+
+      expect(controller.current_user).to be_nil
+      expect(session[:user]).to be_nil
+    end
+
+    it "keeps an unexpired token" do
+      session[:user] = {id: 1, email: "test@example.com", expire_at: Time.now.to_i + 3600}
+
+      expect(controller.current_user.id).to eq(1)
+      expect(session[:user]).not_to be_nil
+    end
+  end
 end

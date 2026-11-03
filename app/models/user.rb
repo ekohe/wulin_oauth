@@ -220,7 +220,9 @@ class User
       email: email,
       access_token: access_token,
       refresh_token: refresh_token,
-      expire_at: expire_at,
+      # Epoch seconds: a Time in the session comes back from the JSON cookie serializer as an
+      # ISO 8601 string, and "2026-...".to_i is 2026.
+      expire_at: expire_at&.to_i,
       app_admin: app_admin,
       a_password: a_password,
       welcome_email_sent_at: welcome_email_sent_at,
@@ -239,5 +241,11 @@ class User
 
   def can_change_password?
     can_change_password.nil? || can_change_password
+  end
+
+  # The resource host only sends an expiry for apps authorised through Mima,
+  # so a token issued without one is treated as unexpired.
+  def expired?
+    expire_at.present? && expire_at <= Time.now
   end
 end

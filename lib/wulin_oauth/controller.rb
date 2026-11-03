@@ -7,6 +7,14 @@ module WulinOAuth
     def current_user
       @current_user ||= begin
         user = User.from_session(session)
+        # Enforced here rather than in require_login, so an expired token is
+        # unauthenticated everywhere — require_login and require_admin are
+        # plain methods a host has to wire up itself, and views read
+        # current_user directly.
+        if user&.expired?
+          session.delete(:user)
+          user = nil
+        end
         user.ip = format_ip_address(request.remote_ip) if user
         user
       end

@@ -35,6 +35,32 @@ RSpec.describe User do
     it("honors an explicit false") { expect(described_class.new(can_change_password: false)).not_to be_can_change_password }
   end
 
+  describe "#expired?" do
+    it { expect(described_class.new(id: 1, expire_at: Time.now.to_i - 1)).to be_expired }
+    it { expect(described_class.new(id: 1, expire_at: Time.now.to_i + 3600)).not_to be_expired }
+
+    it "is false when the provider issued no expiry" do
+      expect(described_class.new(id: 1)).not_to be_expired
+    end
+
+    # The cookie store serializes the session with ActiveSupport::JSON: a Time written there comes
+    # back as an ISO 8601 string, and "2026-...".to_i is 2026.
+    it "survives a JSON session round trip" do
+      user = described_class.new(id: 1, expires_in: 3600)
+
+      restored = described_class.from_session(user: ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(user.to_hash)))
+
+      expect(restored).not_to be_expired
+      expect(restored.expire_at.to_i).to eq(user.expire_at.to_i)
+    end
+
+    # Sessions written before expire_at was stored as seconds hold that ISO string: the user signs in
+    # again once, through the provider, rather than the gem parsing a format it no longer writes.
+    it "treats an ISO 8601 expire_at from an older session as expired" do
+      expect(described_class.new(id: 1, expire_at: (Time.now + 3600).iso8601)).to be_expired
+    end
+  end
+
   describe ".from_session" do
     it "is nil without a stored user" do
       expect(described_class.from_session({})).to be_nil
