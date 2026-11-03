@@ -26,10 +26,6 @@ class TestApp < Rails::Application
   config.secret_key_base = "test"
   config.hosts.clear
   config.logger = Logger.new(IO::NULL)
-
-  # The engine adds its Sprockets manifests to config.assets.precompile when Propshaft is absent.
-  config.assets = ActiveSupport::OrderedOptions.new
-  config.assets.precompile = []
 end
 
 Rails.application.initialize!
