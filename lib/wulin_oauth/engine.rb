@@ -23,5 +23,11 @@ module WulinOAuth
         include WulinOAuth::Controller
       end
     end
+
+    # Here rather than when this file is required: by the time initializers run, Bundler has required
+    # every gem, so the menu does not depend on wulin_master coming before wulin_oauth in the Gemfile.
+    initializer "wulin_oauth.app_bar_menu" do
+      require "wulin_oauth/wulin_master" if defined?(::WulinMaster)
+    end
   end
 end
