@@ -1,0 +1,26 @@
+image: ruby:3.4.4
+
+cache:
+  key:
+    files:
+      - Gemfile.lock
+  paths:
+    - vendor/bundle
+
+stages:
+  - lint
+  - test
+
+before_script:
+  - bundle config set --local path vendor/bundle
+  - bundle install --jobs $(nproc)
+
+lint:
+  stage: lint
+  script:
+    - bundle exec standardrb
+
+rspec:
+  stage: test
+  script:
+    - bundle exec rspec
