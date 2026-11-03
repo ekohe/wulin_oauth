@@ -1,14 +1,8 @@
-require 'rake'
-require 'rake/testtask'
+# frozen_string_literal: true
 
-task :default => :test
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
 
-desc "Test the wulin_oauth gem"
-Rake::TestTask.new("test") { |t|
-  t.libs << 'app'
-  t.libs << 'lib'
-  t.libs << 'config'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
-}
+RSpec::Core::RakeTask.new(:spec)
+
+task default: :spec
