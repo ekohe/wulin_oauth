@@ -69,5 +69,21 @@ RSpec.describe WulinOauth::UserSessionsController, type: :controller do
       expect(controller.current_user.id).to eq(1)
       expect(session[:user]).not_to be_nil
     end
+
+    it "records an IPv4 client behind an IPv6 socket by its IPv4 address" do
+      session[:user] = {id: 1}
+      request.remote_addr = "::ffff:10.0.0.1"
+
+      expect(controller.current_user.ip).to eq("10.0.0.1")
+    end
+
+    it "leaves the request's own remote_ip as it was" do
+      session[:user] = {id: 1}
+      request.remote_addr = "::ffff:10.0.0.1"
+
+      controller.current_user
+
+      expect(request.remote_ip).to eq("::ffff:10.0.0.1")
+    end
   end
 end

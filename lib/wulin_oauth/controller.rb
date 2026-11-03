@@ -20,12 +20,9 @@ module WulinOAuth
       end
     end
 
+    # An IPv4 client behind an IPv6 socket arrives as ::ffff:a.b.c.d.
     def format_ip_address(ip)
-      if ip.starts_with? "::ffff:"
-        ip.gsub!(/^::ffff:/, "")
-      else
-        ip
-      end
+      ip.delete_prefix("::ffff:")
     end
 
     def current_user=(new_user)
