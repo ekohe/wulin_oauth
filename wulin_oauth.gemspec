@@ -18,11 +18,11 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.executables = []
   s.require_paths = ["lib"]
-  s.required_ruby_version = ">= 3.2"
+  s.required_ruby_version = ">= 3.4"
 
   s.add_dependency "haml-rails"
   s.add_dependency "httparty"
-  s.add_dependency "rails", ">= 8.0"
+  s.add_dependency "rails", ">= 8.1"
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "standardrb"
 end
