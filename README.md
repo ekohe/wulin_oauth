@@ -1,58 +1,49 @@
 # WulinOAuth
 
-## How to Use
+Rails engine for [`wulin_master`](https://gitlab.ekohe.com/ekohe/wulin/wulin_master) apps. It signs users in through an OAuth provider (mima in the hbs apps) and adds user invite, dismiss and reset actions.
 
-- Put 'gem wulin_oauth' to your Gemfile:
+## Installation
 
-  ```shell
-  gem `wulin_oauth`
-  ```
+Add the submodule at `vendor/gems/wulin_oauth` on `develop`, then add the gem to the `Gemfile`:
 
-  **_Hint_(very significant)**: As we add the invite/dismiss user function(add_user/remove_user action), which is based on `wulin_permits`. So we have to put the `wulin_oauth` under `wulin_permits` in the `Gemfile`, for example:
+```ruby
+gem "wulin_oauth", path: "vendor/gems/wulin_oauth"
+```
 
-  ```ruby
-  gem "wulin_permits", path: "vendor/gems/wulin_permits"
-  gem "wulin_oauth", path: "vendor/gems/wulin_oauth"
-  ```
+The invite and dismiss actions are based on `wulin_permits`. Put `wulin_oauth` below it in the `Gemfile`.
 
-  Besides, we added the `WulinMaster.actions.AddUser`, so we have to import the `wulin_oauth.js` into your project `app/assets/javascripts/application.js`, for example:
+Then:
 
-  ```js
-  //= require 'master/master.js'
-  //= require 'wulin_permits.js'
-  //= require 'wulin_oauth.js'
-  ```
+```shell
+bundle install
+bundle exec rails g wulin_oauth:config
+```
 
-  you'd better put `wulin_oauth.js` under `master/master.js` to avoid unnecessary trouble.
+The generator creates `config/wulin_oauth.yml`. Set `authorize_uri`, `access_token_uri`, `resource_host`, `change_password_uri`, `logout_uri`, `redirect_uri`, `oauth_identifier` and `oauth_secret` for each environment.
 
-  If you get a error like `users create (NoMethodError) "undefined method errors for #<User:0x00006bec69aa62b8>"`, please make sure the UsersController that is being called is from `wulin_oauth`.
+## Usage
 
-- Run bundler command to install the gem:
+The engine adds the routes `/login`, `/logout`, `/oauth/callback` and `users`.
 
-  ```shell
-  bundle install
-  ```
+Load the JavaScript in the app bundle. The app's login page (`layouts/session.html.haml`) needs its own entry that also loads jQuery. The hbs apps use `app/javascript/wulin_oauth.js`:
 
-- After you install wulin_oauth gem, you need run the generator:
+```js
+import "../../vendor/gems/wulin_oauth/app/javascript/wulin_oauth.esm.js"
+```
 
-  ```shell
-  bundle exec rails g wulin_oauth:migration
-  ```
+When `WulinMaster` is defined, the gem adds a user menu with Change Password and Logout.
 
-  It will generator `db/migrate/<timestamp>_create_users.rb` migrate file to your app
+The `UsersController` that handles the requests must come from `wulin_oauth`. If you get `undefined method errors for #<User>`, check that.
 
-  Run with **_bundle exec rails g_** for get generator list.
+## Development
 
-- Don't forget to run the db:migrate rake command:
+Ruby 4.0.9, Rails 8.1. The gem has no test suite. CI builds the gem:
 
-  ```shell
-  bundle exec rake db:migrate
-  ```
-
-## Contributing
-
-Jimmy, Xuhao and Maxime Guilbot from Ekohe, inc.
+```shell
+bundle install
+gem build wulin_oauth.gemspec
+```
 
 ## License
 
-WulinOAuth is released under the MIT license.
+MIT, see `LICENSE`.

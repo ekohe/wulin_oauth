@@ -1,23 +1,22 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "wulin_oauth/version"
+require_relative "lib/wulin_oauth/version"
 
 Gem::Specification.new do |s|
-  s.name        = "wulin_oauth"
-  s.version     = WulinOAuth::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Ekohe"]
-  s.email       = ["team@ekohe.com"]
-  s.homepage    = "http://rubygems.org/gems/wulin_oauth"
-  s.summary     = "Authentication module for wulin_master"
-  s.description = "This gem provides a Oauth authentication interface."
+  s.name = "wulin_oauth"
+  s.version = WulinOAuth::VERSION
+  s.authors = ["Ekohe"]
+  s.email = ["dev@ekohe.com"]
+  s.homepage = "https://gitlab.ekohe.com/ekohe/wulin/wulin_oauth"
+  s.summary = "OAuth sign-in for wulin_master apps"
+  s.description = "Rails engine that signs users in through an OAuth provider (mima) and manages users through its API."
+  s.license = "MIT"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files = `git ls-files`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency 'haml'
-  s.add_dependency 'haml-rails'
-  s.add_dependency 'httparty'
+  s.required_ruby_version = ">= 3.4"
+
+  s.add_dependency "rails", ">= 8.1"
+  s.add_dependency "haml"
+  s.add_dependency "haml-rails"
+  s.add_dependency "httparty"
 end
