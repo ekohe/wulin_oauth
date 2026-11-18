@@ -1,0 +1,20 @@
+image: ruby:4.0.9
+
+stages:
+  - test
+
+default:
+  before_script:
+    - bundle config set --local path vendor/bundle
+    - bundle install --jobs 8
+  cache:
+    key:
+      files:
+        - Gemfile.lock
+    paths:
+      - vendor/bundle
+
+build:
+  stage: test
+  script:
+    - gem build wulin_oauth.gemspec
