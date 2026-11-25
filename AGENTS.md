@@ -19,7 +19,7 @@
 ## Commands
 
 ```shell
-export PATH=/opt/homebrew/Cellar/ruby/4.0.9/bin:$PATH
+export PATH=/opt/homebrew/Cellar/ruby/4.0.10/bin:$PATH
 bundle install
 gem build wulin_oauth.gemspec
 ```
